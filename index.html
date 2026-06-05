@@ -403,7 +403,7 @@
 
                 /* ─ lifecycle ─ */
                 async init() {
-                    await this.fetchWeather(null, null, ' ');
+                    await this.fetchWeather(null, null, '');
                     if (window._googleMapsReady) {
                         this.setupAutocomplete();
                     } else {
@@ -436,13 +436,15 @@
                     this.error = null;
                     this.locationLabel = label;
                     try {
-                        const url = `${WEATHER_API_ENDPOINT}`;
+                        let url = `${WEATHER_API_ENDPOINT}`;
                         const headers = { 'Content-Type': 'application/json' };
-                        const body = { lat: lat, lon: lon }
                         const token = WEATHER_TOKEN
 
                         if (token) {
                             headers['Authorization'] = `Bearer ${token}`;
+                        }
+                        if (lat != null && lon != null) {
+                            url = `${url}?lat=${lat}&lon=${lon}`
                         }
                         const res = await fetch(url, { headers });
                         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
@@ -461,12 +463,13 @@
                 },
 
                 /* ─ actions ─ */
-                resetSearch() {
+                async resetSearch() {
                     this.data = null;
                     this.locationLabel = '';
                     this.error = null;
                     const input = document.getElementById('location-search');
                     if (input) input.value = '';
+                    await this.fetchWeather(null, null, '')
                 },
 
                 /* ─ data helpers ─ */
