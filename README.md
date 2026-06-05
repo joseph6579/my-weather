@@ -21,4 +21,4 @@ Install vite by running `npm install`
 
 #### Running the project
 
-Run the following command: `npm dev` and open the specified local server port on your computer
+Run the following command: `npm run dev` and open the specified local server port on your computer

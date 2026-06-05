@@ -24,8 +24,6 @@
             s.src = `https://maps.googleapis.com/maps/api/js?key=${gToken}&libraries=places&callback=initGoogleMaps`;
             s.async = true;
             document.head.appendChild(s);
-        } else {
-            console.warn("Google Maps API Key placeholder detected. Check your .env setup!");
         }
     </script>
     <script>
