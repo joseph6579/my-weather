@@ -1,7 +1,12 @@
+// Force compatibility for older environments if needed
+const fetch = (...args) =>
+  import("node-fetch")
+    .then(({ default: fetch }) => fetch(...args))
+    .catch(() => globalThis.fetch(...args));
+
 exports.handler = async function (event, context) {
-  // 1. Handle CORS Preflight Options Request
   const headers = {
-    "Access-Control-Allow-Origin": "*", // Safe to use '*' here since Netlify proxies securely
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers":
       "Content-Type, Authorization, X-Requested-With",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
@@ -11,20 +16,33 @@ exports.handler = async function (event, context) {
     return { statusCode: 200, headers, body: "" };
   }
 
-  // 2. Extract query parameters passed from Alpine.js (Netlify uses event.queryStringParameters)
   const { lat, lon } = event.queryStringParameters || {};
 
-  // 3. Retrieve your token securely from Netlify environment variables
-  const token = process.env.VITE_WEATHER_TOKEN;
-
-  // 4. Construct external target API URL
-  let weatherURL = "https://weather-ai.co";
-  if (lat && lon) {
-    weatherURL = `${weatherURL}?lat=${lat}&lon=${lon}`;
+  if (!lat || !lon) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({ error: "Missing lat or lon query parameters" }),
+    };
   }
 
+  // Fallback check: Look for both common token names to be safe
+  const token = process.env.VITE_WEATHER_TOKEN || process.env.WEATHER_TOKEN;
+
+  if (!token) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        error:
+          "Server configuration error: Weather API token is missing on Netlify.",
+      }),
+    };
+  }
+
+  const weatherURL = `https://weather-ai.co{lat}&lon=${lon}`;
+
   try {
-    // 5. Fire server-to-server request
     const response = await fetch(weatherURL, {
       method: "GET",
       headers: {
@@ -34,27 +52,34 @@ exports.handler = async function (event, context) {
       },
     });
 
+    // Capture the exact text returned by the WeatherAI server if it's unhappy
+    const responseText = await response.text();
+
     if (!response.ok) {
       return {
         statusCode: response.status,
         headers,
         body: JSON.stringify({
-          error: `Weather service error: ${response.statusText}`,
+          error: `WeatherAI rejected the request with Status ${response.status}`,
+          details: responseText,
         }),
       };
     }
 
-    const data = await response.json();
+    // If successful, parse the textual data cleanly back into JSON
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(data),
+      body: responseText,
     };
   } catch (error) {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({
+        error: "Internal server error occurred",
+        message: error.message,
+      }),
     };
   }
 };
