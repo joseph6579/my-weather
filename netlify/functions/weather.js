@@ -27,12 +27,23 @@ exports.handler = async function (event, context) {
 
   if (lat != null && lon != null) {
     let eventData = JSON.stringify(event);
+    let finalData = {
+      params: {
+        lat: event.queryStringParameters.get("lat"),
+        lon: event.queryStringParameters.get("lon"),
+      },
+      raw_query: {
+        lat: event.rawQuery.get("lat"),
+        lon: event.rawQuery.get("lon"),
+      },
+    };
     return {
       statusCode: 400,
       headers,
       body: JSON.stringify({
         error: "Missing lat or lon query parameters",
-        event: event,
+        event: eventData,
+        finalData: finalData,
       }),
     };
   }
