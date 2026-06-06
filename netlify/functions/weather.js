@@ -15,7 +15,7 @@ exports.handler = async function (event, context) {
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers, body: "" };
   }
-  console.log(JSON.Stringify(event));
+  console.log(JSON.stringify(event));
 
   let { lat, lon } = event.queryStringParameters || {};
 
