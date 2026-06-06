@@ -436,7 +436,7 @@
                     this.error = null;
                     this.locationLabel = label;
                     try {
-                        let url = `/.netlify/functions/weather`;
+                        let url = `.netlify/functions/weather`;
                         const params = new URLSearchParams();
                         if (lat != null && lon != null) {
                             params.append('lat', lat);
