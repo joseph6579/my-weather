@@ -26,23 +26,27 @@ exports.handler = async function (event, context) {
   }
 
   if (lat != null && lon != null) {
-    let eventData = JSON.stringify(event);
     let finalData = {
-      params: {
-        lat: event.queryStringParameters.get("lat"),
-        lon: event.queryStringParameters.get("lon"),
+      extracted: {
+        lat: lat,
+        lon: lon,
       },
-      raw_query: {
-        lat: event.rawQuery.get("lat"),
-        lon: event.rawQuery.get("lon"),
+      netlifyObject: {
+        // Read plain object values directly
+        lat: event.queryStringParameters
+          ? event.queryStringParameters.lat
+          : null,
+        lon: event.queryStringParameters
+          ? event.queryStringParameters.lon
+          : null,
       },
+      rawQueryString: event.rawQuery || "", // This is just a plain string
     };
     return {
       statusCode: 400,
       headers,
       body: JSON.stringify({
         error: "Missing lat or lon query parameters",
-        event: eventData,
         finalData: finalData,
       }),
     };
