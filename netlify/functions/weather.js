@@ -1,4 +1,3 @@
-// Force compatibility for older environments if needed
 const fetch = (...args) =>
   import("node-fetch")
     .then(({ default: fetch }) => fetch(...args))
@@ -36,7 +35,6 @@ exports.handler = async function (event, context) {
     };
   }
 
-  // Fallback check: Look for both common token names to be safe
   const token = process.env.VITE_WEATHER_TOKEN || process.env.WEATHER_TOKEN;
 
   if (!token) {
@@ -62,7 +60,6 @@ exports.handler = async function (event, context) {
       },
     });
 
-    // Capture the exact text returned by the WeatherAI server if it's unhappy
     const responseText = await response.text();
 
     if (!response.ok) {
@@ -76,7 +73,6 @@ exports.handler = async function (event, context) {
       };
     }
 
-    // If successful, parse the textual data cleanly back into JSON
     return {
       statusCode: 200,
       headers,

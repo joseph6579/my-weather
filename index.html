@@ -436,19 +436,19 @@
                     this.error = null;
                     this.locationLabel = label;
                     try {
-                        let url = `.netlify/functions/weather`;
-                        const params = new URLSearchParams();
-                        if (lat != null && lon != null) {
-                            params.append('lat', lat);
-                            params.append('lon', lon);
-                        }
-                        url = `${url}?${params.toString()}`;
-
+                        const weatherURL = `${WEATHER_API_ENDPOINT}?lat=${lat}&lon=${lon}`;
+                        const token = WEATHER_TOKEN;
 
                         // No Authorization header needed here! The server handles it.
                         const headers = { 'Content-Type': 'application/json' };
 
-                        const res = await fetch(url, { headers });
+                        const res = await fetch(weatherURL, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                Accept: "application/json",
+                                "Content-Type": "application/json",
+                            },
+                        });
                         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
                         const json = await res.json();
                         this.data = json;
