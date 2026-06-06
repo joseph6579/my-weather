@@ -436,18 +436,11 @@
                     this.error = null;
                     this.locationLabel = label;
                     try {
-                        let url = '/.netlify/functions/weather';
+                        let url = `/.netlify/functions/weather?lat=${lat}&lon=${lon}`;
 
                         // No Authorization header needed here! The server handles it.
                         const headers = { 'Content-Type': 'application/json' };
 
-                        if (lat != null && lon != null) {
-                            url = `${url}?lat=${lat}&lon=${lon}`;
-                        }
-
-                        if (lat != null && lon != null) {
-                            url = `${url}?lat=${lat}&lon=${lon}`
-                        }
                         const res = await fetch(url, { headers });
                         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
                         const json = await res.json();
