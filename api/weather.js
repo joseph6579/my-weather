@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+  // 1. Correct CORS security conflict (Do not use "*" with Allow-Credentials)
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "https://vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST"); // Added POST since you use method: "POST" below
   res.setHeader(
     "Access-Control-Allow-Headers",
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
@@ -15,11 +16,12 @@ export default async function handler(req, res) {
   // 2. Extract query parameters passed from Alpine.js
   const { lat, lon } = req.query;
 
-  // 3. Read your secret token safely securely on the server side
+  // 3. Securely use your secret token and full API URL
   const token = process.env.VITE_WEATHER_TOKEN;
-  const weatherURL = "/v1/hourly";
+  const weatherURL = "https://weather-ai.co"; // Fixed: Added absolute URL
 
   try {
+    // 4. Properly structure the configuration object for a POST request
     const config = {
       method: "POST",
       headers: {
@@ -28,16 +30,19 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
     };
+
+    // 5. Correctly stringify and append payload to the body field
     if (lat != null && lon != null) {
-      const response = await fetch(weatherURL, config, { lat: lat, lon: lon });
-    } else {
-      const response = await fetch(weatherURL, config);
+      config.body = JSON.stringify({ lat: Number(lat), lon: Number(lon) });
     }
 
+    // 6. Execute fetch with single config argument
+    const response = await fetch(weatherURL, config);
+
     if (!response.ok) {
-      return res
-        .status(response.status)
-        .json({ error: "Failed fetching weather data" });
+      return res.status(response.status).json({
+        error: `Failed fetching weather data: ${response.statusText}`,
+      });
     }
 
     const data = await response.json();
