@@ -41,7 +41,7 @@ exports.handler = async function (event, context) {
 
   try {
     const response = await fetch(weatherURL, {
-      method: "GET",
+      method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
