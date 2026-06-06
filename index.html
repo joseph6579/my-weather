@@ -403,7 +403,7 @@
 
                 /* ─ lifecycle ─ */
                 async init() {
-                    await this.fetchWeather(null, null, '');
+                    await this.fetchWeather(-1.2864, 36.8172, 'Nairobi');
                     if (window._googleMapsReady) {
                         this.setupAutocomplete();
                     } else {
@@ -471,7 +471,7 @@
                     this.error = null;
                     const input = document.getElementById('location-search');
                     if (input) input.value = '';
-                    await this.fetchWeather(null, null, '')
+                    await this.fetchWeather(-1.2864, 36.8172, 'Nairobi');
                 },
 
                 /* ─ data helpers ─ */
