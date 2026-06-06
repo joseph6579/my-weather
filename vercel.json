@@ -1,3 +1,26 @@
 {
-    "version": 2
+    "version": 2,
+    "builds": [
+        {
+            "src": "api/weather.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/api/weather",
+            "destination": "api/weather.js"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
 }
