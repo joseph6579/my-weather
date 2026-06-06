@@ -1,7 +1,7 @@
 {
     "headers": [
         {
-            "source": "/api/(.*)",
+            "source": "/v1/(.*)",
             "headers": [
                 {
                     "key": "Access-Control-Allow-Origin",
@@ -16,6 +16,12 @@
                     "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
                 }
             ]
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/v1/:path*",
+            "destination": "https://weather-ai.co*"
         }
     ]
 }

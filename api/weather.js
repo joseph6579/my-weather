@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   // 3. Read your secret token safely securely on the server side
   const token = process.env.VITE_WEATHER_TOKEN;
-  const weatherURL = "https://api.weather-ai.co/v1/hourly";
+  const weatherURL = "/v1/hourly";
 
   try {
     const config = {
