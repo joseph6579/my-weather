@@ -15,7 +15,7 @@ exports.handler = async function (event, context) {
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers, body: "" };
   }
-  console.log(json.Stringify(event));
+  console.log(JSON.Stringify(event));
 
   let { lat, lon } = event.queryStringParameters || {};
 
@@ -26,10 +26,14 @@ exports.handler = async function (event, context) {
   }
 
   if (lat != null && lon != null) {
+    let eventData = JSON.stringify(event);
     return {
       statusCode: 400,
       headers,
-      body: JSON.stringify({ error: "Missing lat or lon query parameters" }),
+      body: JSON.stringify({
+        error: "Missing lat or lon query parameters",
+        event: event,
+      }),
     };
   }
 
