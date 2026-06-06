@@ -1,8 +1,3 @@
 {
-    "rewrites": [
-        {
-            "source": "/v1/:path*",
-            "destination": "https://weather-ai.co*"
-        }
-    ]
+    "version": 2
 }
