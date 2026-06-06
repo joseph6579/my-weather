@@ -25,23 +25,7 @@ exports.handler = async function (event, context) {
     lon = lon || backupParams.get("lon");
   }
 
-  if (lat != null && lon != null) {
-    let finalData = {
-      extracted: {
-        lat: lat,
-        lon: lon,
-      },
-      netlifyObject: {
-        // Read plain object values directly
-        lat: event.queryStringParameters
-          ? event.queryStringParameters.lat
-          : null,
-        lon: event.queryStringParameters
-          ? event.queryStringParameters.lon
-          : null,
-      },
-      rawQueryString: event.rawQuery || "", // This is just a plain string
-    };
+  if (lat == null && lon == null) {
     return {
       statusCode: 400,
       headers,
