@@ -7,6 +7,14 @@ On searching a location (restricted to Kenyan locations), the parameters `lat` a
 
 #### Getting Started
 
+To run the project locally, ensure that you are on the `main` branch by running;
+
+```
+git switch main
+```
+
+The branch `dev` has been confifured for Netlify serverless functions and will not run locally.
+
 Create a `.env` file and add the following values;
 
 ```
