@@ -436,7 +436,7 @@
                     this.error = null;
                     this.locationLabel = label;
                     try {
-                        let url = '/api/weather';
+                        let url = '/.netlify/functions/weather';
 
                         // No Authorization header needed here! The server handles it.
                         const headers = { 'Content-Type': 'application/json' };
