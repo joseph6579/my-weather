@@ -16,7 +16,13 @@ exports.handler = async function (event, context) {
     return { statusCode: 200, headers, body: "" };
   }
 
-  const { lat, lon } = event.queryStringParameters || {};
+  let { lat, lon } = event.queryStringParameters || {};
+
+  if ((!lat || !lon) && event.rawQuery) {
+    const backupParams = new URLSearchParams(event.rawQuery);
+    lat = lat || backupParams.get("lat");
+    lon = lon || backupParams.get("lon");
+  }
 
   if (lat != null && lon != null) {
     return {
