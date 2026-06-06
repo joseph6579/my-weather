@@ -17,13 +17,10 @@ exports.handler = async function (event, context) {
   }
 
   const { lat, lon } = event.queryStringParameters || {};
+  let body = {};
 
-  if (!lat || !lon) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: "Missing lat or lon query parameters" }),
-    };
+  if (lat != null && lon != null) {
+    body = { lat: lat, ln: lon };
   }
 
   // Fallback check: Look for both common token names to be safe
@@ -40,7 +37,7 @@ exports.handler = async function (event, context) {
     };
   }
 
-  const weatherURL = `https://weather-ai.co{lat}&lon=${lon}`;
+  const weatherURL = `https://weather-ai.co/v1/hourly`;
 
   try {
     const response = await fetch(weatherURL, {
@@ -50,6 +47,7 @@ exports.handler = async function (event, context) {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
+      body,
     });
 
     // Capture the exact text returned by the WeatherAI server if it's unhappy
