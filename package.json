@@ -23,5 +23,8 @@
   "homepage": "https://github.com/joseph6579/my-weather#readme",
   "devDependencies": {
     "vite": "^8.0.16"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }

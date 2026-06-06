@@ -1,5 +1,3 @@
-const fetch = require("node-fetch"); // Netlify native Node environment support
-
 exports.handler = async function (event, context) {
   // 1. Handle CORS Preflight Options Request
   const headers = {
